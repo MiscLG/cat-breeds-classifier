@@ -8,27 +8,22 @@ loc = os.path.dirname(os.path.realpath(__file__))
 label_path = os.path.join(loc, "nn_files/retrained_labels.txt")
 graph_path = os.path.join(loc, "nn_files/retrained_graph.pb")
 
-# change this as you see fit
-image_path = sys.argv[1]
-
-# Read in the image_data
-image_data = tf.gfile.GFile(image_path, 'rb').read()
-
 # Loads label file, strips off carriage return
 label_lines = [line.rstrip()
                for line in tf.gfile.GFile(label_path)]
 
 
-def predict(image_path, verbose=False):
-    image_path = os.path.abspath(image_path)
-    # Read in the image_data
-    image_data = tf.gfile.GFile(image_path, 'rb').read()
-
-    # Unpersists graph from file
+def import_graph():
     with tf.gfile.GFile(graph_path, 'rb') as f:
         graph_def = tf.GraphDef()
         graph_def.ParseFromString(f.read())
         _ = tf.import_graph_def(graph_def, name='')
+
+
+def predict_breed(image_path, verbose=False):
+    image_path = os.path.abspath(image_path)
+    # Read in the image_data
+    image_data = tf.gfile.GFile(image_path, 'rb').read()
 
     with tf.Session() as sess:
         # Feed the image_data as input to the graph and get first prediction
@@ -49,4 +44,13 @@ def predict(image_path, verbose=False):
         return label_lines[top_k[0]]
 
 
-print(predict(image_path))
+def main():
+    # change this as you see fit
+    print("hello")
+    image_path = sys.argv[1]
+    import_graph()
+    print(predict_breed(image_path))
+
+
+if __name__ == "__main__":
+    main()
