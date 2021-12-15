@@ -1,3 +1,6 @@
+"""
+This file contains the functions used to load and use a tensorflow model used to predict cat breeds.
+"""
 # import tensorflow as tf
 import sys
 import os
@@ -14,6 +17,7 @@ label_lines = [line.rstrip()
 
 
 def import_graph():
+    """loads the graph file to for model context """
     with tf.gfile.GFile(graph_path, 'rb') as f:
         graph_def = tf.GraphDef()
         graph_def.ParseFromString(f.read())
@@ -21,6 +25,7 @@ def import_graph():
 
 
 def predict_breed(image_path, verbose=False):
+    """applies model to predict the breed of the cat"""
     image_path = os.path.abspath(image_path)
     # Read in the image_data
     image_data = tf.gfile.GFile(image_path, 'rb').read()
